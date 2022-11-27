@@ -1,5 +1,5 @@
 export default interface BaseEntity {
-	Id: string;
-	DataInclusao: Date;
-	DataAlteracao: Date;
+	id: string;
+	dataInclusao: Date;
+	dataAlteracao: Date;
 }

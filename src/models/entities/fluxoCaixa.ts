@@ -2,11 +2,11 @@ import EnumTipoFluxo from "../enums/enumTipoFluxo";
 import BaseEntity from "./baseEntity";
 
 export default interface FluxoCaixa extends BaseEntity {
-	Descricao: string;
-	Tipo: EnumTipoFluxo;
-	Valor: number;
-	Categoria: string;
-	NumeroParcela: number;
-	Data: Date;
-	Observacao: string;
+	descricao: string;
+	tipo: EnumTipoFluxo;
+	valor: number;
+	categoria: string;
+	numeroParcela: number;
+	data: Date;
+	observacao: string;
 }

@@ -1,7 +1,7 @@
 import { MENUS } from "../../routes/menus";
 import "./nav-bar.style.css";
 
-function NavBarComponent() {
+function NavBar() {
 	return (
 		<nav>
 			<div id="nav-title">
@@ -9,9 +9,9 @@ function NavBarComponent() {
 			</div>
 			<div id="nav-menu">
 				<ul id="menu">
-					{MENUS.map(({ nomeMenu, linkMenu }) => {
+					{MENUS.map(({ nomeMenu, linkMenu }, index) => {
 						return (
-							<li>
+							<li key={index}>
 								<a href={linkMenu}>{nomeMenu}</a>
 							</li>
 						);
@@ -22,4 +22,4 @@ function NavBarComponent() {
 	);
 }
 
-export default NavBarComponent;
+export default NavBar;
