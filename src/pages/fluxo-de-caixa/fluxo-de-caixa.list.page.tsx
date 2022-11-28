@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,6 +9,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import FluxoCaixa from "../../models/entities/fluxoCaixa";
 import EnumTipoFluxo from "../../models/enums/enumTipoFluxo";
 import { IPaginationResponse } from "../../models/http/httpResponse";
@@ -76,6 +79,7 @@ export default function FluxoDeCaixaListPage() {
 
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
+	const navigate = useNavigate();
 
 	const handleChangePage = (event: unknown, newPage: number) => {
 		setPage(newPage);
@@ -86,6 +90,10 @@ export default function FluxoDeCaixaListPage() {
 	) => {
 		setRowsPerPage(+event.target.value);
 		setPage(0);
+	};
+
+	const handleEdit = (element: FluxoCaixa) => {
+		navigate("/");
 	};
 
 	useEffect(() => {
@@ -104,7 +112,7 @@ export default function FluxoDeCaixaListPage() {
 						<TableRow>
 							<TableCell
 								key={99}
-								align="left"
+								align="center"
 								style={{
 									position: "sticky",
 									left: 0,
@@ -136,7 +144,7 @@ export default function FluxoDeCaixaListPage() {
 								>
 									<TableCell
 										key={999}
-										align="left"
+										align="center"
 										style={{
 											position: "sticky",
 											left: 0,
@@ -144,7 +152,26 @@ export default function FluxoDeCaixaListPage() {
 											zIndex: 999,
 										}}
 									>
-										Eiita
+										<button
+											type="button"
+											className="btn btn-link"
+											title="Editar"
+											onClick={() => handleEdit(row)}
+										>
+											<FontAwesomeIcon
+												icon={faPenToSquare}
+											/>
+										</button>
+
+										<button
+											type="button"
+											className="btn btn-link"
+											title="Remover"
+										>
+											<FontAwesomeIcon
+												icon={faTrashCan}
+											/>
+										</button>
 									</TableCell>
 									{columns.map((column) => {
 										const value = row[column.id];
