@@ -73,6 +73,10 @@ export default function FluxoDeCaixaListPage() {
 		navigate("/");
 	};
 
+	const handleInsert = () => {
+		navigate("incluir");
+	};
+
 	useEffect(() => {
 		FluxoCaixaService.getAll(page + 1, rowsPerPage).then((response) => {
 			if (response.success) {
@@ -82,12 +86,26 @@ export default function FluxoDeCaixaListPage() {
 	}, [page, rowsPerPage]);
 
 	return (
-		<CustomTable
-			columns={columns}
-			paginationData={paginationData}
-			onPageChange={handleChangePage}
-			onChangeRowsPerPage={handleChangeRowsPerPage}
-			onEdit={handleEdit}
-		/>
+		<>
+			<h2 className="title">Busca de Fluxo de Caixa</h2>
+			<div className="container">
+				<button
+					type="button"
+					className="btn btn-primary"
+					style={{ margin: "0 0 20px 0" }}
+					onClick={handleInsert}
+				>
+					Incluir
+				</button>
+
+				<CustomTable
+					columns={columns}
+					paginationData={paginationData}
+					onPageChange={handleChangePage}
+					onChangeRowsPerPage={handleChangeRowsPerPage}
+					onEdit={handleEdit}
+				/>
+			</div>
+		</>
 	);
 }
