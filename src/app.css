@@ -13,3 +13,12 @@ main {
 	margin-left: 30px;
 	margin-bottom: 20px;
 }
+
+.field-validation-error {
+	color: red;
+	font-size: 0.8rem;
+}
+
+.field-error {
+	border-color: red;
+}

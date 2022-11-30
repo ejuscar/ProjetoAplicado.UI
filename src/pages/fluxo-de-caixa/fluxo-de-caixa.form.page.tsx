@@ -43,7 +43,8 @@ export default function FluxoDeCaixaFormPage() {
 			}
 		});
 	};
-	const required = (value: any) => (value ? undefined : "Required");
+	const required = (value: any) =>
+		value ? undefined : "* Campo Obrigatório";
 
 	return (
 		<>
@@ -57,136 +58,212 @@ export default function FluxoDeCaixaFormPage() {
 					render={({ handleSubmit }) => (
 						<form onSubmit={handleSubmit}>
 							<div className="row">
-								<div className="col-12 col-md-2">
-									<label
-										htmlFor="inTipo"
-										className="form-label"
-									>
-										Tipo
-									</label>
-									<Field
-										name="tipo"
-										component="select"
-										id="inTipo"
-										className="form-select"
-										validate={required}
-										defaultValue={undefined}
-									>
-										<option value={undefined}>
-											Selecione
-										</option>
-										{tiposFluxo.map(
-											({ description, value }) => {
-												return (
-													<option
-														key={value}
-														value={value}
-													>
-														{description}
-													</option>
-												);
-											}
-										)}
-									</Field>
-								</div>
-								<div className="col-12 col-md-4">
-									<label
-										htmlFor="inCategoria"
-										className="form-label"
-									>
-										Categoria
-									</label>
-									<Field
-										name="categoria"
-										component="input"
-										placeholder="Categoria"
-										id="inCategoria"
-										className="form-control"
-									/>
-								</div>
-								<div className="col-12 col-md-4">
-									<label
-										htmlFor="inDescricao"
-										className="form-label"
-									>
-										Descrição
-									</label>
-									<Field
-										name="descricao"
-										component="input"
-										placeholder="Descrição"
-										id="inDescricao"
-										className="form-control"
-									/>
-								</div>
-								<div className="col-12 col-md-2">
-									<label
-										htmlFor="inValor"
-										className="form-label"
-									>
-										Valor
-									</label>
-									<Field
-										name="valor"
-										component="input"
-										placeholder="Valor"
-										id="inValor"
-										className="form-control"
-										type="number"
-									/>
-								</div>
+								<Field name="tipo" validate={required}>
+									{({ input, meta }) => (
+										<div className="col-12 col-md-2">
+											<label
+												htmlFor="inTipo"
+												className="form-label"
+											>
+												Tipo
+											</label>
+											<select
+												{...input}
+												id="inTipo"
+												className={`form-select ${
+													meta.error && meta.touched
+														? "field-error"
+														: null
+												}`}
+												defaultValue=""
+											>
+												<option value="">
+													Selecione
+												</option>
+												{tiposFluxo.map(
+													({
+														description,
+														value,
+													}) => {
+														return (
+															<option
+																key={value}
+																value={value}
+															>
+																{description}
+															</option>
+														);
+													}
+												)}
+											</select>
+											{meta.error && meta.touched && (
+												<span className="field-validation-error">
+													{meta.error}
+												</span>
+											)}
+										</div>
+									)}
+								</Field>
+
+								<Field name="categoria">
+									{({ input }) => (
+										<div className="col-12 col-md-4">
+											<label
+												htmlFor="inCategoria"
+												className="form-label"
+											>
+												Categoria
+											</label>
+											<input
+												{...input}
+												placeholder="Categoria"
+												id="inCategoria"
+												className="form-control"
+											/>
+										</div>
+									)}
+								</Field>
+
+								<Field name="descricao" validate={required}>
+									{({ input, meta }) => (
+										<div className="col-12 col-md-4">
+											<label
+												htmlFor="inDescricao"
+												className="form-label"
+											>
+												Descrição
+											</label>
+											<input
+												{...input}
+												placeholder="Descrição"
+												id="inDescricao"
+												className={`form-control ${
+													meta.error && meta.touched
+														? "field-error"
+														: null
+												}`}
+											/>
+
+											{meta.error && meta.touched && (
+												<span className="field-validation-error">
+													{meta.error}
+												</span>
+											)}
+										</div>
+									)}
+								</Field>
+
+								<Field name="valor" validate={required}>
+									{({ input, meta }) => (
+										<div className="col-12 col-md-2">
+											<label
+												htmlFor="inValor"
+												className="form-label"
+											>
+												Valor
+											</label>
+											<input
+												{...input}
+												placeholder="Valor"
+												id="inValor"
+												type="number"
+												className={`form-control ${
+													meta.error && meta.touched
+														? "field-error"
+														: null
+												}`}
+											/>
+
+											{meta.error && meta.touched && (
+												<span className="field-validation-error">
+													{meta.error}
+												</span>
+											)}
+										</div>
+									)}
+								</Field>
 							</div>
 
 							<div className="row mt-2">
-								<div className="col-12 col-md-2">
-									<label
-										htmlFor="inNumeroParcela"
-										className="form-label"
-									>
-										Nº Parcela
-									</label>
-									<Field
-										name="numeroParcela"
-										component="input"
-										placeholder="Número parcela"
-										id="inNumeroParcela"
-										className="form-control"
-										type="number"
-									/>
-								</div>
-								<div className="col-12 col-md-2">
-									<label
-										htmlFor="inData"
-										className="form-label"
-									>
-										Data
-									</label>
-									<Field
-										name="data"
-										component="input"
-										id="inData"
-										className="form-control"
-										type="date"
-									/>
-								</div>
+								<Field name="numeroParcela" validate={required}>
+									{({ input, meta }) => (
+										<div className="col-12 col-md-2">
+											<label
+												htmlFor="inNumeroParcela"
+												className="form-label"
+											>
+												Nº Parcela
+											</label>
+											<input
+												{...input}
+												placeholder="Número parcela"
+												id="inNumeroParcela"
+												type="number"
+												className={`form-control ${
+													meta.error && meta.touched
+														? "field-error"
+														: null
+												}`}
+											/>
+
+											{meta.error && meta.touched && (
+												<span className="field-validation-error">
+													{meta.error}
+												</span>
+											)}
+										</div>
+									)}
+								</Field>
+
+								<Field name="data" validate={required}>
+									{({ input, meta }) => (
+										<div className="col-12 col-md-2">
+											<label
+												htmlFor="inData"
+												className="form-label"
+											>
+												Data
+											</label>
+											<input
+												{...input}
+												id="inData"
+												type="date"
+												className={`form-control ${
+													meta.error && meta.touched
+														? "field-error"
+														: null
+												}`}
+											/>
+
+											{meta.error && meta.touched && (
+												<span className="field-validation-error">
+													{meta.error}
+												</span>
+											)}
+										</div>
+									)}
+								</Field>
 							</div>
 
 							<div className="row mt-2">
-								<div className="col-12">
-									<label
-										htmlFor="inObservacao"
-										className="form-label"
-									>
-										Observação
-									</label>
-									<Field
-										name="observacao"
-										component="textarea"
-										placeholder="Observação"
-										id="inObservacao"
-										className="form-control"
-									/>
-								</div>
+								<Field name="observacao">
+									{({ input }) => (
+										<div className="col-12 ">
+											<label
+												htmlFor="inObservacao"
+												className="form-label"
+											>
+												Observação
+											</label>
+											<textarea
+												{...input}
+												placeholder="Observação"
+												id="inObservacao"
+												className="form-control"
+											/>
+										</div>
+									)}
+								</Field>
 							</div>
 
 							<div className="w-100 mt-4 d-flex justify-content-center">
