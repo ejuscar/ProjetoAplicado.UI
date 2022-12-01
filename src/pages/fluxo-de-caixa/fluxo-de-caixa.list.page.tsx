@@ -42,6 +42,8 @@ const columns: Column[] = [
 ];
 
 export default function FluxoDeCaixaListPage() {
+	const [page, setPage] = useState(0);
+	const [rowsPerPage, setRowsPerPage] = useState(5);
 	const [paginationData, setPaginationData] = useState<
 		IPaginationResponse<FluxoCaixa> | null | undefined
 	>({
@@ -49,13 +51,11 @@ export default function FluxoDeCaixaListPage() {
 		hasNext: false,
 		hasPrevious: false,
 		items: [],
-		pageSize: 10,
+		pageSize: rowsPerPage,
 		totalCount: 0,
 		totalPages: 0,
 	});
 
-	const [page, setPage] = useState(0);
-	const [rowsPerPage, setRowsPerPage] = useState(10);
 	const navigate = useNavigate();
 
 	const handleChangePage = (event: unknown, newPage: number) => {
@@ -99,6 +99,8 @@ export default function FluxoDeCaixaListPage() {
 				</button>
 
 				<CustomTable
+					rowsPerPage={rowsPerPage}
+					currentPage={page}
 					columns={columns}
 					paginationData={paginationData}
 					onPageChange={handleChangePage}

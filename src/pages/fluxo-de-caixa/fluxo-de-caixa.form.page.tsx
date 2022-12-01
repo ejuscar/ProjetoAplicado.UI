@@ -38,7 +38,6 @@ export default function FluxoDeCaixaFormPage() {
 
 		FluxoCaixaService.post(newValues).then((response) => {
 			if (response.success) {
-				console.log("Deu bom. Id criado: " + response.data);
 				navigate(searchUrlBase);
 			}
 		});

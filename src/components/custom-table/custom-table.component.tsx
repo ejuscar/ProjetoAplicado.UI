@@ -21,6 +21,8 @@ export interface Column {
 }
 
 interface ITableProps {
+	rowsPerPage: number;
+	currentPage: number;
 	onPageChange: (event: unknown, newPage: number) => void;
 	onChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	onEdit: (element: any) => void;
@@ -29,6 +31,8 @@ interface ITableProps {
 }
 
 export default function CustomTable({
+	rowsPerPage,
+	currentPage,
 	paginationData,
 	columns,
 	onPageChange,
@@ -128,11 +132,11 @@ export default function CustomTable({
 				</Table>
 			</TableContainer>
 			<TablePagination
-				rowsPerPageOptions={[10, 25, 100]}
+				rowsPerPageOptions={[5, 10, 25, 50, 100]}
 				component="div"
 				count={paginationData ? paginationData.totalCount : 0}
-				rowsPerPage={10}
-				page={0}
+				rowsPerPage={rowsPerPage}
+				page={currentPage}
 				onPageChange={onPageChange}
 				onRowsPerPageChange={onChangeRowsPerPage}
 			/>
