@@ -69,20 +69,34 @@ export default function FluxoDeCaixaListPage() {
 		setPage(0);
 	};
 
-	const handleEdit = ({ id }: FluxoCaixa) => {
+	const handleEdit = (id: string) => {
 		navigate(`editar/${id}`);
+	};
+
+	const handleRemove = (id: string) => {
+		FluxoCaixaService.remove(id).then((response) => {
+			if (response.success) {
+				if (paginationData?.items.length === 1 && page > 0)
+					setPage(page - 1);
+				else getData(page, rowsPerPage);
+			}
+		});
 	};
 
 	const handleInsert = () => {
 		navigate("incluir");
 	};
 
-	useEffect(() => {
+	function getData(page: number, rowsPerPage: number) {
 		FluxoCaixaService.getAll(page + 1, rowsPerPage).then((response) => {
 			if (response.success) {
 				setPaginationData(response.data);
 			}
 		});
+	}
+
+	useEffect(() => {
+		getData(page, rowsPerPage);
 	}, [page, rowsPerPage]);
 
 	return (
@@ -106,6 +120,7 @@ export default function FluxoDeCaixaListPage() {
 					onPageChange={handleChangePage}
 					onChangeRowsPerPage={handleChangeRowsPerPage}
 					onEdit={handleEdit}
+					onRemove={handleRemove}
 				/>
 			</div>
 		</>

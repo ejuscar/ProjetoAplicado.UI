@@ -50,9 +50,20 @@ async function put(
 	return await response.json();
 }
 
-export default {
+async function remove(id: string): Promise<IHttpServiceResponse<string>> {
+	const response = await fetch(`${URL_API}/${id}`, {
+		method: "DELETE",
+	});
+
+	return await response.json();
+}
+
+const ENDPOINTS = {
 	getAll,
 	getById,
 	post,
 	put,
+	remove,
 };
+
+export default ENDPOINTS;

@@ -25,7 +25,8 @@ interface ITableProps {
 	currentPage: number;
 	onPageChange: (event: unknown, newPage: number) => void;
 	onChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	onEdit: (element: any) => void;
+	onEdit: (id: string) => void;
+	onRemove: (id: string) => void;
 	paginationData: IPaginationResponse<any> | null | undefined;
 	columns: Column[];
 }
@@ -38,6 +39,7 @@ export default function CustomTable({
 	onPageChange,
 	onChangeRowsPerPage,
 	onEdit,
+	onRemove,
 }: ITableProps) {
 	return (
 		<Paper sx={{ width: "100%", overflow: "auto" }}>
@@ -92,7 +94,7 @@ export default function CustomTable({
 											type="button"
 											className="btn btn-link"
 											title="Editar"
-											onClick={() => onEdit(row)}
+											onClick={() => onEdit(row.id)}
 										>
 											<FontAwesomeIcon
 												icon={faPenToSquare}
@@ -103,6 +105,7 @@ export default function CustomTable({
 											type="button"
 											className="btn btn-link"
 											title="Remover"
+											onClick={() => onRemove(row.id)}
 										>
 											<FontAwesomeIcon
 												icon={faTrashCan}
