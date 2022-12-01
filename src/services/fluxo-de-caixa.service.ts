@@ -16,6 +16,11 @@ async function getAll(
 	return await response.json();
 }
 
+async function getById(id: string): Promise<IHttpServiceResponse<FluxoCaixa>> {
+	const response = await fetch(`${URL_API}/${id}`);
+	return await response.json();
+}
+
 async function post(
 	data: FluxoCaixaBase
 ): Promise<IHttpServiceResponse<string>> {
@@ -30,7 +35,24 @@ async function post(
 	return await response.json();
 }
 
+async function put(
+	id: string,
+	data: FluxoCaixaBase
+): Promise<IHttpServiceResponse<string>> {
+	const response = await fetch(`${URL_API}/${id}`, {
+		method: "PUT",
+		body: JSON.stringify(data),
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+
+	return await response.json();
+}
+
 export default {
 	getAll,
+	getById,
 	post,
+	put,
 };

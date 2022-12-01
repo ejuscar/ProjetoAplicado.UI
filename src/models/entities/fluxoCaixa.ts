@@ -2,13 +2,13 @@ import EnumTipoFluxo from "../enums/enumTipoFluxo";
 import BaseEntity from "./baseEntity";
 
 export interface FluxoCaixaBase {
-	descricao: string;
-	tipo: EnumTipoFluxo;
-	valor: number;
-	categoria: string;
-	numeroParcela: number;
+	descricao: string | undefined;
+	tipo: EnumTipoFluxo | string | undefined;
+	valor: number | undefined;
+	categoria: string | undefined;
+	numeroParcela: number | undefined;
 	data: Date;
-	observacao: string;
+	observacao: string | undefined;
 }
 
 export interface FluxoCaixaForm extends Omit<FluxoCaixaBase, "data"> {

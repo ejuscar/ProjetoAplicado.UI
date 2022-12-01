@@ -9,10 +9,43 @@ import {
 	FluxoCaixaBase,
 	FluxoCaixaForm,
 } from "../../models/entities/fluxoCaixa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import FluxoCaixaService from "../../services/fluxo-de-caixa.service";
+import { useEffect, useState } from "react";
 
 export default function FluxoDeCaixaFormPage() {
+	const params = useParams();
+	const navigate = useNavigate();
+	const [form, setForm] = useState<FluxoCaixaForm>({
+		categoria: undefined,
+		data: getInputStringFromDate(new Date()),
+		descricao: undefined,
+		numeroParcela: 1,
+		observacao: undefined,
+		tipo: undefined,
+		valor: undefined,
+	});
+
+	useEffect(() => {
+		if (params.id) {
+			const id = params!.id;
+
+			FluxoCaixaService.getById(id).then((response) => {
+				if (response.success) {
+					const formData: FluxoCaixaForm = {
+						...response.data!,
+						data: getInputStringFromDate(
+							new Date(response.data!.data)
+						),
+						tipo: response.data!.tipo!.toString(),
+					};
+					setForm(formData);
+				}
+			});
+		}
+	}, [params]);
+
+	const formTitle = `${params.id ? "Edição" : "Inclusão"} de Fluxo de Caixa`;
 	const searchUrlBase = "/fluxo-de-caixa";
 
 	const tiposFluxo: SelectModel[] = [
@@ -26,33 +59,38 @@ export default function FluxoDeCaixaFormPage() {
 		},
 	];
 
-	const navigate = useNavigate();
-
 	const onSubmit = function (values: FluxoCaixaForm) {
 		const { data, tipo } = values;
 		const newValues: FluxoCaixaBase = {
 			...values,
 			data: getDateFromInputString(data),
-			tipo: +tipo,
+			tipo: +tipo!,
 		};
 
-		FluxoCaixaService.post(newValues).then((response) => {
-			if (response.success) {
-				navigate(searchUrlBase);
-			}
-		});
+		if (params.id) {
+			FluxoCaixaService.put(params.id, newValues).then((response) => {
+				if (response.success) {
+					navigate(searchUrlBase);
+				}
+			});
+		} else {
+			FluxoCaixaService.post(newValues).then((response) => {
+				if (response.success) {
+					navigate(searchUrlBase);
+				}
+			});
+		}
 	};
+
 	const required = (value: any) =>
 		value ? undefined : "* Campo Obrigatório";
 
 	return (
 		<>
-			<h2 className="title">Inclusão de Fluxo de Caixa</h2>
+			<h2 className="title">{formTitle}</h2>
 			<div className="container">
 				<Form
-					initialValues={{
-						data: getInputStringFromDate(new Date()),
-					}}
+					initialValues={form}
 					onSubmit={onSubmit}
 					render={({ handleSubmit }) => (
 						<form onSubmit={handleSubmit}>
@@ -74,7 +112,6 @@ export default function FluxoDeCaixaFormPage() {
 														? "field-error"
 														: null
 												}`}
-												defaultValue=""
 											>
 												<option value="">
 													Selecione

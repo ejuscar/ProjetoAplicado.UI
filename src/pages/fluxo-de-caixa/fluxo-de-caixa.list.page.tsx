@@ -69,8 +69,8 @@ export default function FluxoDeCaixaListPage() {
 		setPage(0);
 	};
 
-	const handleEdit = (element: FluxoCaixa) => {
-		navigate("/");
+	const handleEdit = ({ id }: FluxoCaixa) => {
+		navigate(`editar/${id}`);
 	};
 
 	const handleInsert = () => {

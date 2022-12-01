@@ -53,6 +53,7 @@ export default function CustomTable({
 									left: 0,
 									backgroundColor: "white",
 									zIndex: 999,
+									width: 115,
 								}}
 							>
 								Ações

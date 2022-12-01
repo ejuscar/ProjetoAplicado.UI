@@ -21,6 +21,10 @@ const router = createBrowserRouter([
 		path: "/fluxo-de-caixa/incluir",
 		element: <FluxoDeCaixaFormPage />,
 	},
+	{
+		path: "/fluxo-de-caixa/editar/:id",
+		element: <FluxoDeCaixaFormPage />,
+	},
 ]);
 
 export default router;
