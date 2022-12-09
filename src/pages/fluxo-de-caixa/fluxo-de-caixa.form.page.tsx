@@ -63,7 +63,7 @@ export default function FluxoDeCaixaFormPage() {
 		const { data, tipo } = values;
 		const newValues: FluxoCaixaBase = {
 			...values,
-			data: getDateFromInputString(data),
+			data: getDateFromInputString(data)!,
 			tipo: +tipo!,
 		};
 

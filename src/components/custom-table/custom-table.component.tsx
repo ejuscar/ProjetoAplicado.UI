@@ -17,6 +17,7 @@ export interface Column {
 	minWidth?: number;
 	align?: "right";
 	format?: (value: number) => string;
+	formatBool?: (value: boolean) => string;
 	formatString?: (date: string) => string;
 }
 
@@ -41,6 +42,20 @@ export default function CustomTable({
 	onEdit,
 	onRemove,
 }: ITableProps) {
+	function formatValue(column: any, value: any): string {
+		console.log(`${value} ${typeof value}`);
+
+		if (column.format && typeof value === "number")
+			return column.format(value);
+
+		if (column.formatString && typeof value === "string")
+			return column.formatString(value);
+
+		if (column.formatBool && typeof value === "boolean")
+			return column.formatBool(value);
+
+		return value.toString();
+	}
 	return (
 		<Paper sx={{ width: "100%", overflow: "auto" }}>
 			<TableContainer sx={{ maxHeight: 440 }}>
@@ -119,13 +134,7 @@ export default function CustomTable({
 												key={column.id}
 												align={column.align}
 											>
-												{column.format &&
-												typeof value === "number"
-													? column.format(value)
-													: column.formatString &&
-													  typeof value === "string"
-													? column.formatString(value)
-													: value.toString()}
+												{formatValue(column, value)}
 											</TableCell>
 										);
 									})}

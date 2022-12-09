@@ -1,4 +1,4 @@
 export interface SelectModel {
-	description: string;
-	value: number | string;
+	description?: string;
+	value: number | string | undefined;
 }
