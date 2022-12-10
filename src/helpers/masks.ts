@@ -1,13 +1,13 @@
 import { MaskProps } from "react-mask-field";
 
 export const phoneMask: MaskProps = {
-	mask: "(__) ____-____",
+	mask: "(__)____-____",
 	replacement: { _: /\d/ },
 	showMask: true,
 };
 
 export const cellphoneMask: MaskProps = {
-	mask: "(__) _____-____",
+	mask: "(__)_____-____",
 	replacement: { _: /\d/ },
 	showMask: true,
 };

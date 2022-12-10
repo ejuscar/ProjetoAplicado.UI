@@ -1,4 +1,4 @@
-import { Form, Field } from "react-final-form";
+import { Form } from "react-final-form";
 import {
 	getDateFromInputString,
 	getInputStringFromDate,
@@ -24,6 +24,8 @@ import {
 } from "../../helpers/selectList";
 import { cellphoneMask, cepMask, phoneMask } from "../../helpers/masks";
 import { Divider } from "@mui/material";
+import { formatCep, formatTelefone } from "../../helpers/formatHelper";
+import EnumTipoPessoa from "../../models/enums/enumTipoPessoa";
 
 export default function PessoaFormPage() {
 	const params = useParams();
@@ -42,10 +44,10 @@ export default function PessoaFormPage() {
 		numero: undefined,
 		complemento: undefined,
 		cidade: undefined,
-		uF: undefined,
+		uf: undefined,
 		cep: undefined,
 		tipo: undefined,
-		ativo: false,
+		ativo: true,
 		motivoInatividade: undefined,
 		dataBatismo: undefined,
 		funcao: undefined,
@@ -81,6 +83,18 @@ export default function PessoaFormPage() {
 								  )
 								: dataComparecimento,
 						tipo: response.data!.tipo?.toString(),
+						genero: response.data!.genero?.toString(),
+						estadoCivil: response.data!.estadoCivil?.toString(),
+						funcao: response.data!.funcao?.toString(),
+						cep: formatCep(response.data!.cep),
+						telefone: formatTelefone(
+							response.data!.telefone,
+							"telefone"
+						),
+						celular: formatTelefone(
+							response.data!.celular,
+							"celular"
+						),
 					};
 					setForm(formData);
 				}
@@ -89,18 +103,41 @@ export default function PessoaFormPage() {
 	}, [params]);
 
 	const formTitle = `${params.id ? "Edição" : "Inclusão"} de Pessoa`;
-	const searchUrlBase = "/pessoa";
+	const searchUrlBase = "/pessoas";
 
 	const onSubmit = function (values: PessoaForm) {
-		const { dataBatismo, dataComparecimento, dataNascimento, tipo } =
-			values;
+		const {
+			dataBatismo,
+			dataComparecimento,
+			dataNascimento,
+			tipo,
+			genero,
+			estadoCivil,
+			funcao,
+			cep,
+			telefone,
+			celular,
+		} = values;
 		const newValues: PessoaBase = {
 			...values,
 			dataBatismo: getDateFromInputString(dataBatismo),
 			dataComparecimento: getDateFromInputString(dataComparecimento),
 			dataNascimento: getDateFromInputString(dataNascimento),
-			tipo: +tipo!,
+			tipo: tipo !== undefined ? +tipo : undefined,
+			genero: genero !== undefined ? +genero : undefined,
+			estadoCivil: estadoCivil !== undefined ? +estadoCivil : undefined,
+			funcao: funcao !== undefined ? +funcao : undefined,
+			cep: cep !== undefined ? parseInt(cep.replace("-", "")) : undefined,
+			telefone: telefone?.replace(/\D/g, ""),
+			celular: celular?.replace(/\D/g, ""),
 		};
+
+		if (tipo === EnumTipoPessoa.Membro)
+			newValues.dataComparecimento = undefined;
+		else {
+			newValues.dataBatismo = undefined;
+			newValues.funcao = undefined;
+		}
 
 		if (params.id) {
 			PessoaService.put(params.id, newValues).then((response) => {
@@ -117,8 +154,10 @@ export default function PessoaFormPage() {
 		}
 	};
 
-	const required = (value: any) =>
-		value ? undefined : "* Campo Obrigatório";
+	const required = (value: string | undefined) =>
+		value !== undefined && value?.trim() !== ""
+			? undefined
+			: "* Campo Obrigatório";
 
 	return (
 		<>
@@ -127,284 +166,132 @@ export default function PessoaFormPage() {
 				<Form
 					initialValues={form}
 					onSubmit={onSubmit}
-					render={({ handleSubmit }) => (
+					render={({ handleSubmit, values }) => (
 						<form onSubmit={handleSubmit}>
 							<Divider className="mb-4">
 								Informações Pessoais
 							</Divider>
 
 							<div className="row">
-								<Field name="nome">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-4">
-											<TextInput
-												label="Nome"
-												name={input.name}
-											/>
+								<div className="col-12 col-md-4">
+									<TextInput
+										label="Nome"
+										name="nome"
+										validate={required}
+									/>
+								</div>
 
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
+								<div className="col-12 col-md-2">
+									<DateInput
+										label="Data Nascimento"
+										name="dataNascimento"
+									/>
+								</div>
 
-								<Field name="dataNascimento">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-2">
-											<DateInput
-												label="Data Nascimento"
-												name={input.name}
-											/>
+								<div className="col-12 col-md-2">
+									<SelectInput
+										label="Gênero"
+										name="genero"
+										options={generoSelect}
+									/>
+								</div>
 
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
+								<div className="col-12 col-md-2">
+									<SelectInput
+										label="Estado Civil"
+										name="estadoCivil"
+										options={estadoCivilSelect}
+									/>
+								</div>
 
-								<Field name="genero">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-2">
-											<SelectInput
-												label="Gênero"
-												name={input.name}
-												options={generoSelect}
-											/>
-
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
-
-								<Field name="estadoCivil">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-2">
-											<SelectInput
-												label="Estado Civil"
-												name={input.name}
-												options={estadoCivilSelect}
-											/>
-
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
-
-								<Field name="telefone">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-2">
-											<MaskInput
-												label="Telefone"
-												name={input.name}
-												mask={phoneMask}
-											/>
-
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
+								<div className="col-12 col-md-2">
+									<MaskInput
+										label="Telefone"
+										name="telefone"
+										mask={phoneMask}
+									/>
+								</div>
 							</div>
 
 							<div className="row">
-								<Field name="celular">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-2">
-											<MaskInput
-												label="Celular"
-												name={input.name}
-												mask={cellphoneMask}
-											/>
+								<div className="col-12 col-md-2">
+									<MaskInput
+										label="Celular"
+										name="celular"
+										mask={cellphoneMask}
+									/>
+								</div>
 
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
+								<div className="col-12 col-md-4">
+									<TextInput
+										label="Email"
+										name="email"
+										type="email"
+										placeholder="email@exemplo.com"
+									/>
+								</div>
 
-								<Field name="email">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-4">
-											<TextInput
-												label="Email"
-												name={input.name}
-												type="email"
-												placeholder="email@exemplo.com"
-											/>
+								<div className="col-12 col-md-2">
+									<TextInput
+										label="Nacionalidade"
+										name="nacionalidade"
+									/>
+								</div>
 
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
-
-								<Field name="nacionalidade">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-2">
-											<TextInput
-												label="Nacionalidade"
-												name={input.name}
-											/>
-
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
-
-								<Field name="naturalidade">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-2">
-											<TextInput
-												label="Naturalidade"
-												name={input.name}
-											/>
-
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
+								<div className="col-12 col-md-2">
+									<TextInput
+										label="Naturalidade"
+										name="naturalidade"
+									/>
+								</div>
 							</div>
 
 							<Divider className="my-4">Endereço</Divider>
 
 							<div className="row">
-								<Field name="logradouro">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-4">
-											<TextInput
-												label="Logradouro"
-												name={input.name}
-											/>
+								<div className="col-12 col-md-4">
+									<TextInput
+										label="Logradouro"
+										name="logradouro"
+									/>
+								</div>
 
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
+								<div className="col-12 col-md-2">
+									<TextInput
+										label="Número"
+										name="numero"
+										type="number"
+									/>
+								</div>
 
-								<Field name="numero">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-2">
-											<TextInput
-												label="Número"
-												name={input.name}
-												type="number"
-											/>
+								<div className="col-12 col-md-2">
+									<TextInput
+										label="Complemento"
+										name="complemento"
+									/>
+								</div>
 
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
-
-								<Field name="complemento">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-2">
-											<TextInput
-												label="Complemento"
-												name={input.name}
-											/>
-
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
-
-								<Field name="cidade">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-4">
-											<TextInput
-												label="Cidade"
-												name={input.name}
-											/>
-
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
+								<div className="col-12 col-md-4">
+									<TextInput label="Cidade" name="cidade" />
+								</div>
 							</div>
 
 							<div className="row">
-								<Field name="uf">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-2">
-											<SelectInput
-												label="UF"
-												name={input.name}
-												options={ufSelect}
-											/>
+								<div className="col-12 col-md-2">
+									<SelectInput
+										label="UF"
+										name="uf"
+										options={ufSelect}
+									/>
+								</div>
 
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
-
-								<Field name="cep">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-2">
-											<MaskInput
-												label="CEP"
-												name={input.name}
-												mask={cepMask}
-											/>
-
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
+								<div className="col-12 col-md-2">
+									<MaskInput
+										label="CEP"
+										name="cep"
+										mask={cepMask}
+									/>
+								</div>
 							</div>
 
 							<Divider className="my-4">
@@ -412,115 +299,64 @@ export default function PessoaFormPage() {
 							</Divider>
 
 							<div className="row">
-								<Field name="tipo">
-									{({ input, meta }) => {
-										return (
-											<div className="col-12 col-md-2">
-												<SelectInput
-													label="Tipo"
-													name={input.name}
-													options={tiposPessoaSelect}
-												/>
+								<div className="col-12 col-md-2">
+									<SelectInput
+										label="Tipo"
+										name="tipo"
+										options={tiposPessoaSelect}
+										validate={required}
+									/>
+								</div>
 
-												{meta.error && meta.touched && (
-													<span className="field-validation-error">
-														{meta.error}
-													</span>
-												)}
-											</div>
-										);
-									}}
-								</Field>
-
-								<Field name="funcao">
-									{({ input, meta }) => (
+								{values.tipo ===
+								EnumTipoPessoa.Membro.toString() ? (
+									<>
 										<div className="col-12 col-md-2">
 											<SelectInput
 												label="Função"
-												name={input.name}
+												name="funcao"
 												options={funcaoSelect}
+												validate={required}
 											/>
-
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
 										</div>
-									)}
-								</Field>
 
-								<Field name="dataBatismo">
-									{({ input, meta }) => (
 										<div className="col-12 col-md-2">
 											<DateInput
 												label="Data Batismo"
-												name={input.name}
+												name="dataBatismo"
 											/>
-
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
 										</div>
-									)}
-								</Field>
+									</>
+								) : null}
 
-								<Field name="dataComparecimento">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-2">
-											<DateInput
-												label="Data Comparecimento"
-												name={input.name}
-											/>
-
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
+								{values.tipo ===
+								EnumTipoPessoa.Visitante.toString() ? (
+									<div className="col-12 col-md-2">
+										<DateInput
+											label="Data Comparecimento"
+											name="dataComparecimento"
+										/>
+									</div>
+								) : null}
 							</div>
 
 							<div className="row mt-2">
-								<Field name="ativo">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-2">
-											<CheckboxInput
-												label="Ativo"
-												name={input.name}
-											/>
-
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
-
-								<Field name="motivoInatividade">
-									{({ input, meta }) => (
-										<div className="col-12 col-md-12">
-											<TextAreaInput
-												label="Motivo Inatividade"
-												name={input.name}
-												hideLabel={true}
-											/>
-
-											{meta.error && meta.touched && (
-												<span className="field-validation-error">
-													{meta.error}
-												</span>
-											)}
-										</div>
-									)}
-								</Field>
+								<div className="col-12 col-md-2">
+									<CheckboxInput label="Ativo" name="ativo" />
+								</div>
 							</div>
+
+							{!values.ativo ? (
+								<div className="row">
+									<div className="col-12 col-md-12">
+										<TextAreaInput
+											label="Motivo Inatividade"
+											name="motivoInatividade"
+											hideLabel={true}
+										/>
+									</div>
+								</div>
+							) : null}
 
 							<div className="w-100 mt-4 d-flex justify-content-center">
 								<button

@@ -27,20 +27,20 @@ export const tiposPessoaSelect: SelectModel[] = [
 
 export const estadoCivilSelect: SelectModel[] = [
 	{
-		description: "Solteiro",
-		value: EnumEstadoCivil.Solteiro,
-	},
-	{
 		description: "Casado",
 		value: EnumEstadoCivil.Casado,
+	},
+	{
+		description: "Divorciado",
+		value: EnumEstadoCivil.Divorciado,
 	},
 	{
 		description: "Separado",
 		value: EnumEstadoCivil.Separado,
 	},
 	{
-		description: "Divorciado",
-		value: EnumEstadoCivil.Divorciado,
+		description: "Solteiro",
+		value: EnumEstadoCivil.Solteiro,
 	},
 	{
 		description: "Viúvo",

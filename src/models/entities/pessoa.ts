@@ -18,7 +18,7 @@ export interface PessoaBase {
 	numero: number | undefined;
 	complemento: string | undefined;
 	cidade: string | undefined;
-	uF: string | undefined;
+	uf: string | undefined;
 	cep: number | undefined;
 	tipo: EnumTipoPessoa | string | undefined;
 	ativo: boolean;
@@ -29,10 +29,11 @@ export interface PessoaBase {
 }
 
 //prettier-ignore
-export interface PessoaForm extends Omit<PessoaBase, "dataNascimento" | "dataBatismo"| "dataComparecimento"> {
+export interface PessoaForm extends Omit<PessoaBase, "dataNascimento" | "dataBatismo" | "dataComparecimento" | "cep"> {
 	dataNascimento: string | undefined;
 	dataBatismo: string | undefined;
 	dataComparecimento: string | undefined;
+	cep: string | undefined;
 }
 
 export default interface Pessoa extends BaseEntity, PessoaBase {}
