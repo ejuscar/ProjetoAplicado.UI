@@ -12,6 +12,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import FluxoCaixaService from "../../services/fluxo-de-caixa.service";
 import { useEffect, useState } from "react";
+import AlertMessage from "../../helpers/alertMessages";
 
 export default function FluxoDeCaixaFormPage() {
 	const params = useParams();
@@ -30,18 +31,23 @@ export default function FluxoDeCaixaFormPage() {
 		if (params.id) {
 			const id = params!.id;
 
-			FluxoCaixaService.getById(id).then((response) => {
-				if (response.success) {
-					const formData: FluxoCaixaForm = {
-						...response.data!,
-						data: getInputStringFromDate(
-							new Date(response.data!.data)
-						),
-						tipo: response.data!.tipo!.toString(),
-					};
-					setForm(formData);
+			FluxoCaixaService.getById(id).then(
+				(response) => {
+					if (response.success) {
+						const formData: FluxoCaixaForm = {
+							...response.data!,
+							data: getInputStringFromDate(
+								new Date(response.data!.data)
+							),
+							tipo: response.data!.tipo!.toString(),
+						};
+						setForm(formData);
+					} else AlertMessage.showError(response.errorMessage);
+				},
+				(error) => {
+					AlertMessage.showError(error);
 				}
-			});
+			);
 		}
 	}, [params]);
 
@@ -68,17 +74,29 @@ export default function FluxoDeCaixaFormPage() {
 		};
 
 		if (params.id) {
-			FluxoCaixaService.put(params.id, newValues).then((response) => {
-				if (response.success) {
-					navigate(searchUrlBase);
+			FluxoCaixaService.put(params.id, newValues).then(
+				(response) => {
+					if (response.success) {
+						navigate(searchUrlBase);
+						AlertMessage.showEditSuccess();
+					} else AlertMessage.showError(response.errorMessage);
+				},
+				(error) => {
+					AlertMessage.showError(error);
 				}
-			});
+			);
 		} else {
-			FluxoCaixaService.post(newValues).then((response) => {
-				if (response.success) {
-					navigate(searchUrlBase);
+			FluxoCaixaService.post(newValues).then(
+				(response) => {
+					if (response.success) {
+						navigate(searchUrlBase);
+						AlertMessage.showInsertSuccess();
+					} else AlertMessage.showError(response.errorMessage);
+				},
+				(error) => {
+					AlertMessage.showError(error);
 				}
-			});
+			);
 		}
 	};
 

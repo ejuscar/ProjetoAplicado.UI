@@ -2,7 +2,7 @@ export function formatTelefone(
 	number: string | undefined,
 	type: "telefone" | "celular"
 ): string | undefined {
-	if (number !== undefined) {
+	if (number) {
 		const maxSize = type === "telefone" ? 10 : 11;
 		const newFone = number.padEnd(maxSize, "0");
 
@@ -17,7 +17,7 @@ export function formatTelefone(
 }
 
 export function formatCep(number: number | undefined): string | undefined {
-	if (number !== undefined) {
+	if (number) {
 		const newCep = number.toString().padEnd(8, "0");
 
 		const firstPart = newCep.substring(0, 5);

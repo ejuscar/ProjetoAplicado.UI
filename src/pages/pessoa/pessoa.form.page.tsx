@@ -26,6 +26,7 @@ import { cellphoneMask, cepMask, phoneMask } from "../../helpers/masks";
 import { Divider } from "@mui/material";
 import { formatCep, formatTelefone } from "../../helpers/formatHelper";
 import EnumTipoPessoa from "../../models/enums/enumTipoPessoa";
+import AlertMessage from "../../helpers/alertMessages";
 
 export default function PessoaFormPage() {
 	const params = useParams();
@@ -58,47 +59,54 @@ export default function PessoaFormPage() {
 		if (params.id) {
 			const id = params!.id;
 
-			PessoaService.getById(id).then((response) => {
-				if (response.success) {
-					//prettier-ignore
-					let { dataNascimento, dataBatismo, dataComparecimento } = response.data!;
+			PessoaService.getById(id).then(
+				(response) => {
+					if (response.success) {
+						//prettier-ignore
+						let { dataNascimento, dataBatismo, dataComparecimento } = response.data!;
 
-					const formData: PessoaForm = {
-						...response.data!,
-						dataNascimento:
-							dataNascimento !== undefined
-								? getInputStringFromDate(
-										new Date(dataNascimento)
-								  )
-								: dataNascimento,
-						dataBatismo:
-							dataBatismo !== undefined
-								? getInputStringFromDate(new Date(dataBatismo))
-								: dataBatismo,
+						const formData: PessoaForm = {
+							...response.data!,
+							dataNascimento:
+								dataNascimento !== undefined
+									? getInputStringFromDate(
+											new Date(dataNascimento)
+									  )
+									: dataNascimento,
+							dataBatismo:
+								dataBatismo !== undefined
+									? getInputStringFromDate(
+											new Date(dataBatismo)
+									  )
+									: dataBatismo,
 
-						dataComparecimento:
-							dataComparecimento !== undefined
-								? getInputStringFromDate(
-										new Date(dataComparecimento)
-								  )
-								: dataComparecimento,
-						tipo: response.data!.tipo?.toString(),
-						genero: response.data!.genero?.toString(),
-						estadoCivil: response.data!.estadoCivil?.toString(),
-						funcao: response.data!.funcao?.toString(),
-						cep: formatCep(response.data!.cep),
-						telefone: formatTelefone(
-							response.data!.telefone,
-							"telefone"
-						),
-						celular: formatTelefone(
-							response.data!.celular,
-							"celular"
-						),
-					};
-					setForm(formData);
+							dataComparecimento:
+								dataComparecimento !== undefined
+									? getInputStringFromDate(
+											new Date(dataComparecimento)
+									  )
+									: dataComparecimento,
+							tipo: response.data!.tipo?.toString(),
+							genero: response.data!.genero?.toString(),
+							estadoCivil: response.data!.estadoCivil?.toString(),
+							funcao: response.data!.funcao?.toString(),
+							cep: formatCep(response.data!.cep),
+							telefone: formatTelefone(
+								response.data!.telefone,
+								"telefone"
+							),
+							celular: formatTelefone(
+								response.data!.celular,
+								"celular"
+							),
+						};
+						setForm(formData);
+					} else AlertMessage.showError(response.errorMessage);
+				},
+				(error) => {
+					AlertMessage.showError(error);
 				}
-			});
+			);
 		}
 	}, [params]);
 
@@ -132,7 +140,7 @@ export default function PessoaFormPage() {
 			celular: celular?.replace(/\D/g, ""),
 		};
 
-		if (tipo === EnumTipoPessoa.Membro)
+		if (newValues.tipo === EnumTipoPessoa.Membro)
 			newValues.dataComparecimento = undefined;
 		else {
 			newValues.dataBatismo = undefined;
@@ -140,17 +148,29 @@ export default function PessoaFormPage() {
 		}
 
 		if (params.id) {
-			PessoaService.put(params.id, newValues).then((response) => {
-				if (response.success) {
-					navigate(searchUrlBase);
+			PessoaService.put(params.id, newValues).then(
+				(response) => {
+					if (response.success) {
+						navigate(searchUrlBase);
+						AlertMessage.showEditSuccess();
+					} else AlertMessage.showError(response.errorMessage);
+				},
+				(error) => {
+					AlertMessage.showError(error);
 				}
-			});
+			);
 		} else {
-			PessoaService.post(newValues).then((response) => {
-				if (response.success) {
-					navigate(searchUrlBase);
+			PessoaService.post(newValues).then(
+				(response) => {
+					if (response.success) {
+						navigate(searchUrlBase);
+						AlertMessage.showInsertSuccess();
+					} else AlertMessage.showError(response.errorMessage);
+				},
+				(error) => {
+					AlertMessage.showError(error);
 				}
-			});
+			);
 		}
 	};
 

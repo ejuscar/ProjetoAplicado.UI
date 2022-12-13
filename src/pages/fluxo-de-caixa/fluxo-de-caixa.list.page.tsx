@@ -7,6 +7,7 @@ import FluxoCaixaService from "../../services/fluxo-de-caixa.service";
 import CustomTable, {
 	Column,
 } from "../../components/custom-table/custom-table.component";
+import AlertMessage from "../../helpers/alertMessages";
 
 const columns: Column[] = [
 	{ id: "id", label: "Id" },
@@ -74,11 +75,17 @@ export default function FluxoDeCaixaListPage() {
 	};
 
 	const handleRemove = (id: string) => {
-		FluxoCaixaService.remove(id).then((response) => {
-			if (response.success) {
-				if (paginationData?.items.length === 1 && page > 0)
-					setPage(page - 1);
-				else getData(page, rowsPerPage);
+		AlertMessage.confirmRemoveItem().then((response) => {
+			if (response.isConfirmed) {
+				FluxoCaixaService.remove(id).then((response) => {
+					if (response.success) {
+						if (paginationData?.items.length === 1 && page > 0)
+							setPage(page - 1);
+						else getData(page, rowsPerPage);
+
+						AlertMessage.showRemoveSuccess();
+					}
+				});
 			}
 		});
 	};
@@ -88,11 +95,15 @@ export default function FluxoDeCaixaListPage() {
 	};
 
 	function getData(page: number, rowsPerPage: number) {
-		FluxoCaixaService.getAll(page + 1, rowsPerPage).then((response) => {
-			if (response.success) {
-				setPaginationData(response.data);
+		FluxoCaixaService.getAll(page + 1, rowsPerPage).then(
+			(response) => {
+				if (response.success) setPaginationData(response.data);
+				else AlertMessage.showError(response.errorMessage);
+			},
+			(error) => {
+				AlertMessage.showError(error);
 			}
-		});
+		);
 	}
 
 	useEffect(() => {
