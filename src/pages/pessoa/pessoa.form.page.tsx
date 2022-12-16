@@ -67,25 +67,20 @@ export default function PessoaFormPage() {
 
 						const formData: PessoaForm = {
 							...response.data!,
-							dataNascimento:
-								dataNascimento !== undefined
-									? getInputStringFromDate(
-											new Date(dataNascimento)
-									  )
-									: dataNascimento,
-							dataBatismo:
-								dataBatismo !== undefined
-									? getInputStringFromDate(
-											new Date(dataBatismo)
-									  )
-									: dataBatismo,
+							dataNascimento: dataNascimento
+								? getInputStringFromDate(
+										new Date(dataNascimento)
+								  )
+								: dataNascimento,
+							dataBatismo: dataBatismo
+								? getInputStringFromDate(new Date(dataBatismo))
+								: dataBatismo,
 
-							dataComparecimento:
-								dataComparecimento !== undefined
-									? getInputStringFromDate(
-											new Date(dataComparecimento)
-									  )
-									: dataComparecimento,
+							dataComparecimento: dataComparecimento
+								? getInputStringFromDate(
+										new Date(dataComparecimento)
+								  )
+								: dataComparecimento,
 							tipo: response.data!.tipo?.toString(),
 							genero: response.data!.genero?.toString(),
 							estadoCivil: response.data!.estadoCivil?.toString(),

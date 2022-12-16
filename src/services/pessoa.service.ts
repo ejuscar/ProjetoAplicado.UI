@@ -3,26 +3,27 @@ import {
 	IPaginationResponse,
 } from "../models/http/httpResponse";
 import Pessoa, { PessoaBase } from "../models/entities/pessoa";
+import { URL_API } from "../helpers/consts";
 
-const URL_API = "https://localhost:7211/pessoa";
+const BASE_URL = `${URL_API}/pessoa`;
 
 async function getAll(
 	pageIndex: number,
 	pageSize: number
 ): Promise<IHttpServiceResponse<IPaginationResponse<Pessoa>>> {
 	const response = await fetch(
-		`${URL_API}?pageIndex=${pageIndex}&pageSize=${pageSize}`
+		`${BASE_URL}?pageIndex=${pageIndex}&pageSize=${pageSize}`
 	);
 	return await response.json();
 }
 
 async function getById(id: string): Promise<IHttpServiceResponse<Pessoa>> {
-	const response = await fetch(`${URL_API}/${id}`);
+	const response = await fetch(`${BASE_URL}/${id}`);
 	return await response.json();
 }
 
 async function post(data: PessoaBase): Promise<IHttpServiceResponse<string>> {
-	const response = await fetch(`${URL_API}`, {
+	const response = await fetch(`${BASE_URL}`, {
 		method: "POST",
 		body: JSON.stringify(data),
 		headers: {
@@ -37,7 +38,7 @@ async function put(
 	id: string,
 	data: PessoaBase
 ): Promise<IHttpServiceResponse<string>> {
-	const response = await fetch(`${URL_API}/${id}`, {
+	const response = await fetch(`${BASE_URL}/${id}`, {
 		method: "PUT",
 		body: JSON.stringify(data),
 		headers: {
@@ -49,7 +50,7 @@ async function put(
 }
 
 async function remove(id: string): Promise<IHttpServiceResponse<string>> {
-	const response = await fetch(`${URL_API}/${id}`, {
+	const response = await fetch(`${BASE_URL}/${id}`, {
 		method: "DELETE",
 	});
 
