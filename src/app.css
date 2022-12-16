@@ -1,17 +1,27 @@
-main {
-	width: 90%;
-	margin: 50px auto;
+body {
+	background-color: #f0f5fc;
 }
 
-.container {
-	background-color: #f0f5fc;
-	padding: 20px;
-	border-radius: 5px;
+main {
+	width: 95%;
+	margin: 25px auto;
+}
+
+.app-container {
+	background-color: white;
+	border-radius: 0.375rem !important;
+	padding: 1.5rem;
 }
 
 .title {
-	margin-left: 30px;
+	/* margin-left: 30px; */
 	margin-bottom: 20px;
+}
+
+.app-card {
+	background-color: white;
+	border-radius: 0.375rem !important;
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
 .field-validation-error {

@@ -93,9 +93,9 @@ export default function PessoaListPage() {
 	}, [page, rowsPerPage]);
 
 	return (
-		<>
-			<h2 className="title">Busca de Pessoas</h2>
-			<div className="container">
+		<div className="app-container">
+			<h2 className="title">Lista de Pessoas</h2>
+			<div>
 				<button
 					type="button"
 					className="btn btn-primary"
@@ -116,6 +116,6 @@ export default function PessoaListPage() {
 					onRemove={handleRemove}
 				/>
 			</div>
-		</>
+		</div>
 	);
 }

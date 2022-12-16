@@ -41,5 +41,7 @@ export default function AtividadeMembrosDashboard({
 			},
 		],
 	};
-	return <Pie data={data} options={options} />;
+	return (
+		<Pie data={data} options={options} style={{ textAlign: "center" }} />
+	);
 }

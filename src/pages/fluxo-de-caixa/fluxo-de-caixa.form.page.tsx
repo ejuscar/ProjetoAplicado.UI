@@ -104,9 +104,9 @@ export default function FluxoDeCaixaFormPage() {
 		value ? undefined : "* Campo Obrigatório";
 
 	return (
-		<>
+		<div className="app-container">
 			<h2 className="title">{formTitle}</h2>
-			<div className="container">
+			<div>
 				<Form
 					initialValues={form}
 					onSubmit={onSubmit}
@@ -339,6 +339,6 @@ export default function FluxoDeCaixaFormPage() {
 					)}
 				/>
 			</div>
-		</>
+		</div>
 	);
 }

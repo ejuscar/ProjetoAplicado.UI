@@ -42,6 +42,22 @@ export default function TimelineSaldoDashboard({
 				display: true,
 				text: `Fluxo de caixa em ${year}`,
 			},
+			tooltip: {
+				callbacks: {
+					label: function (tooltipItem) {
+						const label = tooltipItem.dataset.label;
+
+						const value = tooltipItem.dataset.data[
+							tooltipItem.dataIndex
+						] as number;
+
+						return `${label}: ${new Intl.NumberFormat("pt-BR", {
+							style: "currency",
+							currency: "BRL",
+						}).format(value)}`;
+					},
+				},
+			},
 		},
 	};
 
@@ -49,12 +65,12 @@ export default function TimelineSaldoDashboard({
 		labels: MONTHS,
 		datasets: [
 			{
-				label: "Arrecadações",
+				label: "Entradas",
 				data: arrecadacoes,
 				backgroundColor: "rgba(119, 209, 84, 1)",
 			},
 			{
-				label: "Gastos",
+				label: "Saídas",
 				data: gastos,
 				backgroundColor: "rgba(255, 99, 132, 1)",
 			},

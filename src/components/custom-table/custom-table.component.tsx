@@ -102,7 +102,7 @@ export default function CustomTable({
 											position: "sticky",
 											left: 0,
 											backgroundColor: "white",
-											zIndex: 999,
+											zIndex: 998,
 										}}
 									>
 										<button

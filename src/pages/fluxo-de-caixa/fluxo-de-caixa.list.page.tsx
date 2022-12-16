@@ -111,9 +111,9 @@ export default function FluxoDeCaixaListPage() {
 	}, [page, rowsPerPage]);
 
 	return (
-		<>
-			<h2 className="title">Busca de Fluxo de Caixa</h2>
-			<div className="container">
+		<div className="app-container">
+			<h2 className="title">Lista de Fluxo de Caixa</h2>
+			<div>
 				<button
 					type="button"
 					className="btn btn-primary"
@@ -134,6 +134,6 @@ export default function FluxoDeCaixaListPage() {
 					onRemove={handleRemove}
 				/>
 			</div>
-		</>
+		</div>
 	);
 }

@@ -175,9 +175,9 @@ export default function PessoaFormPage() {
 			: "* Campo Obrigatório";
 
 	return (
-		<>
+		<div className="app-container">
 			<h2 className="title">{formTitle}</h2>
-			<div className="container">
+			<div>
 				<Form
 					initialValues={form}
 					onSubmit={onSubmit}
@@ -392,6 +392,6 @@ export default function PessoaFormPage() {
 					)}
 				/>
 			</div>
-		</>
+		</div>
 	);
 }

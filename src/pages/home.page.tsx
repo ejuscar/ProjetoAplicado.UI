@@ -72,7 +72,7 @@ function HomePage() {
 	}, [year]);
 
 	return (
-		<div className="dashboard-container ">
+		<div>
 			<div className="row justify-content-md-center">
 				<div className="col-12 col-md-2 mb-4 mt-0">
 					<label htmlFor="inAno" className="form-label">
@@ -94,15 +94,15 @@ function HomePage() {
 				</div>
 			</div>
 			<div className="row justify-content-md-around">
-				<div className="col-12 col-md-3">
+				<div className="col-12 col-md-3 app-card text-center">
 					<AtividadeMembrosDashboard {...atividadeMembros} />
 				</div>
-				<div className="col-12 col-md-6">
+				<div className="col-12 col-md-6 app-card">
 					<EvolucaoDashboard {...evolucaoMembros} year={year} />
 				</div>
 			</div>
-			<div className="row justify-content-md-around">
-				<div className="col-12 col-md-8">
+			<div className="row justify-content-md-around mt-4 ">
+				<div className="col-12 col-md-9 app-card">
 					<TimelineSaldoDashboard {...timelineSaldo} year={year} />
 				</div>
 			</div>

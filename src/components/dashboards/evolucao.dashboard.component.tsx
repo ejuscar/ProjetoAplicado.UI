@@ -51,11 +51,13 @@ export default function EvolucaoDashboard({
 			{
 				label: "Novos Membros",
 				data: novosMembros,
+				borderColor: "rgb(119, 209, 84)",
 				backgroundColor: "rgba(119, 209, 84)",
 			},
 			{
 				label: "Novos Visitantes",
 				data: novosVisitantes,
+				borderColor: "rgb(53, 162, 235)",
 				backgroundColor: "rgba(53, 162, 235)",
 			},
 		],
